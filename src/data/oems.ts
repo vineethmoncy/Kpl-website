@@ -1,2 +1,1 @@
-// filled in task T2
-export const oems: unknown[] = [];
+export const oems: string[] = ["Siemens", "ABB", "GE", "ZIV", "Alstom", "CG", "Sifang", "ERL"];

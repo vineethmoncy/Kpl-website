@@ -8,5 +8,170 @@
     "experience": "Experience",
     "about": "About",
     "contact": "Contact"
+  },
+  "header": {
+    "skip": "Skip to content",
+    "callLabel": "Call",
+    "menuOpen": "Open menu",
+    "menuClose": "Close menu"
+  },
+  "lang": {
+    "switchTo": "हिन्दी",
+    "switchAria": "Switch to Hindi"
+  },
+  "cta": {
+    "call": "Call now",
+    "whatsapp": "WhatsApp us",
+    "discuss": "Discuss your project",
+    "services": "Our services",
+    "viewService": "View service",
+    "allServices": "All services",
+    "downloadProfile": "Download company profile",
+    "getInTouch": "Get in touch"
+  },
+  "footer": {
+    "tagline": "System integrator for substation automation, SCADA, PLCC and protection systems.",
+    "quickLinks": "Quick links",
+    "services": "Services",
+    "contact": "Contact",
+    "gstin": "GSTIN",
+    "rights": "All rights reserved."
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "System integrator, 66kV to 400kV",
+      "title": "Substation automation, SCADA, PLCC and protection systems.",
+      "sub": "KPL Power Systems has delivered for state utilities and industry across India for 15+ years. We work with Siemens, ABB, GE, ZIV, Alstom, CG, Sifang and ERL equipment."
+    },
+    "diagram": {
+      "title": "Where KPL works in your substation",
+      "sub": "Select any part of the system to see what we do there.",
+      "hint": "Tap a highlighted area to see details."
+    },
+    "services": {
+      "title": "Our services",
+      "sub": "Automation, communication and protection work from design to ongoing support."
+    },
+    "why": {
+      "title": "Why utilities and plants call KPL",
+      "items": [
+        {
+          "title": "Multi-OEM expertise",
+          "text": "We work with equipment from Siemens, ABB, GE, ZIV, Alstom, CG, Sifang, ERL and more. You get flexibility and vendor independence."
+        },
+        {
+          "title": "Rapid breakdown response",
+          "text": "Our skilled technical team is available for urgent breakdown support. This keeps downtime to a minimum."
+        },
+        {
+          "title": "End-to-end delivery",
+          "text": "We cover system design, commissioning, testing and ongoing maintenance."
+        },
+        {
+          "title": "Experience up to 400kV",
+          "text": "Our engineers have hands-on experience in substation environments up to 400kV."
+        }
+      ]
+    },
+    "tech": {
+      "title": "Equipment and protocols we work with",
+      "oems": "OEM makes",
+      "protocols": "Protocols"
+    },
+    "clients": {
+      "title": "Who we work for",
+      "utilities": "State utilities",
+      "industry": "Industry"
+    },
+    "breakdown": {
+      "title": "Communication link or relay down?",
+      "text": "Our technical team is available for urgent breakdown support to minimise downtime."
+    },
+    "contact": {
+      "title": "Talk to our team",
+      "sub": "Call, message us on WhatsApp or send your enquiry."
+    }
+  },
+  "services": {
+    "title": "Our services",
+    "sub": "Power automation, communication and protection work for substations from 66kV to 400kV.",
+    "scope": "Scope of work",
+    "oems": "Makes handled",
+    "protocols": "Protocols",
+    "related": "Related services",
+    "ctaTitle": "Need support with this service?",
+    "ctaText": "Talk to our team about your substation, project or breakdown."
+  },
+  "experience": {
+    "title": "Experience",
+    "sub": "15+ years of substation automation, SCADA, PLCC and protection projects.",
+    "voltageTitle": "Voltage levels",
+    "voltageText": "Our engineering team has hands-on experience in projects from 66kV to 400kV.",
+    "typesTitle": "Project types",
+    "types": [
+      "Transmission substations: 66kV / 132kV / 220kV / 400kV",
+      "Multiple bay automation and SCADA integration projects",
+      "System restoration and emergency support assignments",
+      "Greenfield and brownfield substation projects"
+    ],
+    "clientsTitle": "Clients",
+    "projectsTitle": "Selected projects"
+  },
+  "about": {
+    "title": "About KPL Power Systems",
+    "intro": [
+      "KPL Power Systems is a system integrator for power automation. We specialise in substation automation, SCADA, PLCC, and protection and control systems.",
+      "We have over 15 years of experience delivering to power utilities and industrial clients across India. Our engineers have hands-on experience on projects from 66kV to 400kV. We have commissioned 200+ PLCC systems and completed substation automation projects for state utilities and private industries."
+    ],
+    "visionTitle": "Vision",
+    "vision": "To be a trusted technology partner for power utilities and industries in India, known for reliable protection, automation and communication solutions.",
+    "missionTitle": "Mission",
+    "mission": [
+      "Deliver quality-driven, future-ready solutions.",
+      "Ensure customer satisfaction through responsive service.",
+      "Stay current with technological advancement.",
+      "Build lasting partnerships based on trust and performance.",
+      "Maintain the highest standards of safety and reliability."
+    ],
+    "distributorTitle": "Authorized distributor",
+    "distributorText": "KPL is an authorized distributor of SANDS, Chennai, for GPS synchronization systems.",
+    "registrationTitle": "Registration",
+    "profileTitle": "Company profile",
+    "profileText": "Download our company profile for details of our experience, equipment and capabilities."
+  },
+  "contact": {
+    "title": "Contact us",
+    "sub": "Reach us by phone, WhatsApp or email, or send an enquiry below.",
+    "phone": "Phone",
+    "whatsapp": "WhatsApp",
+    "email": "Email",
+    "address": "Address",
+    "map": "Open in Google Maps",
+    "form": {
+      "title": "Send an enquiry",
+      "name": "Name",
+      "organisation": "Organisation",
+      "phone": "Phone",
+      "email": "Email",
+      "type": "Enquiry type",
+      "typeOptions": [
+        "New project",
+        "Breakdown support",
+        "Testing and commissioning",
+        "Supply enquiry",
+        "Other"
+      ],
+      "message": "Message",
+      "submit": "Send enquiry",
+      "sending": "Sending...",
+      "success": "Thank you. We will get back to you soon.",
+      "error": "Something went wrong. Please call us or try again.",
+      "required": "This field is required."
+    }
+  },
+  "notFound": {
+    "title": "Page not found",
+    "text": "The page you are looking for does not exist or has moved.",
+    "home": "Back to home"
   }
 }

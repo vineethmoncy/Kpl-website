@@ -1,0 +1,37 @@
+---
+import { t, switchLangPath, type Lang } from "../i18n/utils";
+import Icon from "./Icon.astro";
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const target: Lang = lang === "en" ? "hi" : "en";
+---
+
+<a
+  href={switchLangPath(Astro.url)}
+  hreflang={target}
+  lang={target}
+  aria-label={t(lang, "lang.switchAria")}
+  class="lang-toggle"
+>
+  <Icon name="globe" size={18} />
+  <span>{t(lang, "lang.switchTo")}</span>
+</a>
+
+<style>
+  .lang-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 0 14px;
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--slate);
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .lang-toggle:hover { border-color: var(--slate); text-decoration: none; }
+</style>

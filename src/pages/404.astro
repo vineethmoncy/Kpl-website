@@ -1,10 +1,18 @@
 ---
 import Base from "../layouts/Base.astro";
+import Section from "../components/Section.astro";
+import Button from "../components/Button.astro";
+import { t, localizedPath } from "../i18n/utils";
+
+const lang = "en";
 ---
 
-<Base title="Page not found">
-  <main>
-    <h1>Page not found</h1>
-    <p><a href="/">Return to the home page</a></p>
-  </main>
+<Base title="404" lang={lang}>
+  <Section tone="paper">
+    <h1>404</h1>
+    <div class="mt-8 flex flex-wrap gap-3">
+      <Button href={localizedPath(lang, "/")}>{t(lang, "nav.home")}</Button>
+      <Button href={localizedPath(lang, "/contact/")} variant="secondary">{t(lang, "nav.contact")}</Button>
+    </div>
+  </Section>
 </Base>

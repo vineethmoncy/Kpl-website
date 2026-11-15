@@ -1,0 +1,126 @@
+---
+import { t, localizedPath, type Lang } from "../i18n/utils";
+import { site } from "../data/site";
+import Icon from "./Icon.astro";
+import LangToggle from "./LangToggle.astro";
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+
+const items = [
+  { key: "home", path: "/" },
+  { key: "services", path: "/services/" },
+  { key: "experience", path: "/experience/" },
+  { key: "about", path: "/about/" },
+  { key: "contact", path: "/contact/" },
+].map((i) => {
+  const href = localizedPath(lang, i.path);
+  const here = Astro.url.pathname.replace(/\/?$/, "/");
+  const home = localizedPath(lang, "/");
+  const active = i.path === "/" ? here === home : here.startsWith(href);
+  return { ...i, href, label: t(lang, `nav.${i.key}`), active };
+});
+---
+
+<a href="#main" class="skip">{t(lang, "header.skip")}</a>
+<header class="site-header">
+  <div class="container-x bar">
+    <a href={localizedPath(lang, "/")} class="brand">
+      <img src="/logo.png" alt={site.name} height="40" style="height:40px;width:auto" />
+      <span>{site.name}</span>
+    </a>
+
+    <nav class="desk-nav" aria-label={t(lang, "nav.home")}>
+      {items.map((i) => (
+        <a href={i.href} class:list={["nav-link", { active: i.active }]} aria-current={i.active ? "page" : undefined}>{i.label}</a>
+      ))}
+    </nav>
+
+    <div class="right">
+      <a href={site.phoneHref} class="phone" aria-label={`${t(lang, "header.callLabel")} ${site.phone}`}>
+        <Icon name="phone" size={20} /><span>{site.phone}</span>
+      </a>
+      <LangToggle lang={lang} />
+      <button
+        type="button"
+        id="menu-btn"
+        class="menu-btn"
+        aria-expanded="false"
+        aria-controls="mobile-panel"
+        aria-label={t(lang, "header.menuOpen")}
+        data-open-label={t(lang, "header.menuOpen")}
+        data-close-label={t(lang, "header.menuClose")}
+      >
+        <span class="i-open"><Icon name="menu" size={26} /></span>
+        <span class="i-close"><Icon name="close" size={26} /></span>
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-panel" class="panel" hidden>
+    <nav class="container-x" aria-label={t(lang, "nav.home")}>
+      {items.map((i) => (
+        <a href={i.href} class:list={["m-link", { active: i.active }]} aria-current={i.active ? "page" : undefined}>{i.label}</a>
+      ))}
+      <a href={site.phoneHref} class="m-link m-phone"><Icon name="phone" size={22} /><span>{site.phone}</span></a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const btn = document.getElementById("menu-btn") as HTMLButtonElement | null;
+  const panel = document.getElementById("mobile-panel");
+  if (btn && panel) {
+    const set = (open: boolean) => {
+      btn.setAttribute("aria-expanded", String(open));
+      btn.setAttribute("aria-label", (open ? btn.dataset.closeLabel : btn.dataset.openLabel) || "");
+      panel.hidden = !open;
+    };
+    btn.addEventListener("click", () => set(btn.getAttribute("aria-expanded") !== "true"));
+    panel.addEventListener("click", (e) => { if ((e.target as HTMLElement).closest("a")) set(false); });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && btn.getAttribute("aria-expanded") === "true") { set(false); btn.focus(); }
+    });
+    window.matchMedia("(min-width: 1024px)").addEventListener("change", (m) => { if (m.matches) set(false); });
+  }
+</script>
+
+<style>
+  .skip {
+    position: absolute; left: 8px; top: -100px; z-index: 100;
+    background: var(--surface); color: var(--ink); padding: 12px 16px; border-radius: 8px;
+    border: 2px solid var(--slate);
+  }
+  .skip:focus { top: 8px; }
+  .site-header { position: sticky; top: 0; z-index: 50; background: var(--surface); border-bottom: 1px solid var(--line); }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 68px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink);
+    font-family: var(--font-head); font-weight: 700; font-size: 20px; line-height: 1.1; min-width: 0; }
+  :global(body.lang-hi) .brand { font-family: var(--font-head-hi); }
+  .brand img { flex: none; }
+  @media (max-width: 400px) { .brand span { font-size: 16px; } .brand img { height: 32px !important; } }
+  .desk-nav { display: none; }
+  .right { display: flex; align-items: center; gap: 12px; }
+  .phone { display: none; }
+  .menu-btn { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px;
+    border: 1.5px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); cursor: pointer; }
+  .menu-btn .i-close, .menu-btn[aria-expanded="true"] .i-open { display: none; }
+  .menu-btn[aria-expanded="true"] .i-close { display: inline-flex; }
+  .menu-btn .i-open { display: inline-flex; }
+  .panel { border-top: 1px solid var(--line); background: var(--surface); padding-block: 8px 16px; }
+  .panel[hidden] { display: none; }
+  .m-link { display: flex; align-items: center; gap: 10px; min-height: 56px; font-size: 20px; font-weight: 500;
+    color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--line); }
+  .m-link.active { color: var(--red-ink); font-weight: 600; }
+  .m-phone { color: var(--red-ink); border-bottom: 0; font-weight: 600; }
+  @media (min-width: 1024px) {
+    .desk-nav { display: flex; gap: 4px; margin-left: auto; }
+    .nav-link { display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; color: var(--ink);
+      text-decoration: none; font-size: 17px; font-weight: 500; border-bottom: 3px solid transparent; }
+    .nav-link:hover { color: var(--red-ink); text-decoration: none; }
+    .nav-link.active { border-bottom-color: var(--red-ink); }
+    .phone { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-weight: 600;
+      color: var(--ink); text-decoration: none; white-space: nowrap; }
+    .phone :global(svg) { color: var(--red-ink); }
+    .menu-btn, .panel { display: none !important; }
+  }
+</style>

@@ -8,5 +8,9 @@
     "experience": "अनुभव",
     "about": "हमारे बारे में",
     "contact": "संपर्क"
+  },
+  "lang": {
+    "switchTo": "English",
+    "switchAria": "Switch to English"
   }
 }

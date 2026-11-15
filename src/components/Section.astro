@@ -1,0 +1,27 @@
+---
+interface Props {
+  id?: string;
+  title?: string;
+  sub?: string;
+  tone?: "paper" | "surface" | "slate";
+}
+const { id, title, sub, tone = "paper" } = Astro.props;
+const bg = { paper: "bg-paper text-ink", surface: "bg-surface text-ink", slate: "bg-slate text-white" }[tone];
+---
+
+<section id={id} class:list={["section-y", bg, tone === "slate" && "tone-slate"]}>
+  <div class="container-x">
+    {(title || sub) && (
+      <div class="mb-10 max-w-3xl">
+        {title && <h2 class="tone-title">{title}</h2>}
+        {sub && <p class:list={["mt-3 text-lg", tone === "slate" ? "text-white/85" : "text-muted"]}>{sub}</p>}
+      </div>
+    )}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .tone-slate :global(h1), .tone-slate :global(h2), .tone-slate :global(h3) { color: #fff; }
+  .tone-slate :global(a:not(.btn)) { color: #fff; }
+</style>

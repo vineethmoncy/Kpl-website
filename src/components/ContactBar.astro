@@ -1,0 +1,41 @@
+---
+import { t, type Lang } from "../i18n/utils";
+import { site } from "../data/site";
+import Icon from "./Icon.astro";
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+---
+
+<div class="contact-bar">
+  <a href={site.phoneHref} class="call"><Icon name="phone" size={22} /><span>{t(lang, "cta.call")}</span></a>
+  <a href={site.whatsappHref} class="wa" target="_blank" rel="noopener noreferrer"><Icon name="whatsapp" size={22} /><span>{t(lang, "cta.whatsapp")}</span></a>
+</div>
+
+<style>
+  .contact-bar {
+    display: none;
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 40;
+    box-sizing: content-box;
+    height: 56px;
+    padding-bottom: env(safe-area-inset-bottom);
+    background: var(--surface);
+    border-top: 1px solid var(--line);
+  }
+  @media (max-width: 767px) { .contact-bar { display: flex; } }
+  a {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: var(--font-head);
+    font-size: 19px;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  :global(body.lang-hi) a { font-family: var(--font-head-hi); }
+  .call { background: var(--red-ink); color: #fff; }
+  .wa { background: var(--surface); color: var(--slate); }
+</style>
