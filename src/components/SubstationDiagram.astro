@@ -1,0 +1,385 @@
+---
+import type { Lang } from "../i18n/utils";
+import { t, localizedPath } from "../i18n/utils";
+import { loc } from "../data/types";
+import { getService } from "../data/services";
+import { hotspots, labels } from "../data/diagram";
+import Icon from "./Icon.astro";
+
+interface Props { lang?: Lang }
+const { lang = "en" } = Astro.props;
+
+const items = hotspots
+  .map((h, i) => {
+    const s = getService(h.slug);
+    if (!s) return null;
+    return {
+      i,
+      n: h.id,
+      short: loc(h.short, lang),
+      icon: s.icon,
+      title: loc(s.title, lang),
+      summary: loc(s.summary, lang),
+      href: localizedPath(lang, `/services/${h.slug}/`),
+    };
+  })
+  .filter((x): x is NonNullable<typeof x> => x !== null);
+
+const lb = (k: keyof typeof labels) => loc(labels[k], lang);
+const viewService = t(lang, "cta.viewService");
+const hint = t(lang, "home.diagram.hint");
+const at = (n: number) => items[n]?.href ?? "#";
+const al = (n: number) => items[n]?.title ?? "";
+const cls = (n: number) => (n === 0 ? "hs is-active" : "hs");
+---
+
+<div class="dg" data-diagram>
+  <div class="dg-desk">
+    <div class="dg-main">
+      <div role="group" aria-label={lb("aria")}>
+        <svg viewBox="0 0 1200 520" xmlns="http://www.w3.org/2000/svg" class="dg-svg" focusable="false">
+          <!-- level bands -->
+          <g aria-hidden="true">
+            <rect x="0" y="0" width="1200" height="80" fill="var(--paper)" />
+            <rect x="0" y="80" width="1200" height="115" fill="var(--surface)" />
+            <rect x="0" y="195" width="1200" height="110" fill="var(--paper)" />
+            <rect x="0" y="305" width="1200" height="215" fill="var(--surface)" />
+            <path d="M0 80H1200M0 195H1200M0 305H1200" stroke="var(--line)" stroke-width="1" />
+            <text class="lv" x="14" y="26">{lb("levelControl")}</text>
+            <text class="lv" x="14" y="106">{lb("levelStation")}</text>
+            <text class="lv" x="14" y="221">{lb("levelBay")}</text>
+            <text class="lv" x="14" y="331">{lb("levelProcess")}</text>
+          </g>
+
+          <!-- context (not selectable): busbar, hard-wired links, remote substation -->
+          <g aria-hidden="true">
+            <path class="pw" d="M150 345H400" stroke-width="6" />
+            <text class="tx sm" x="150" y="334">{lb("busbar")}</text>
+            <path class="hw" d="M311 383H440M313 422H440M390 485H440M440 485V296" />
+            <circle class="dot" cx="440" cy="383" r="3" />
+            <circle class="dot" cx="440" cy="422" r="3" />
+            <circle class="dot" cx="440" cy="485" r="3" />
+            <text class="tx sm" x="448" y="403">{lb("hardwired")}</text>
+            <rect class="ctx" x="1040" y="432" width="140" height="54" rx="3" />
+            <text class="tx" x="1110" y="464" text-anchor="middle">{lb("remote")}</text>
+            <path class="pw" d="M1000 458H1040" stroke-width="3" />
+          </g>
+
+          <!-- 1: Gateway, SCADA/HMI, SLDC -->
+          <a href={at(0)} aria-label={al(0)} class={cls(0)} data-hs="0">
+            <rect class="ring" x="172" y="12" width="372" height="148" rx="4" />
+            <rect class="sh" x="380" y="18" width="160" height="42" rx="3" />
+            <text class="tx" x="460" y="44" text-anchor="middle">{lb("sldc")}</text>
+            <rect class="sh" x="400" y="116" width="120" height="38" rx="3" />
+            <text class="tx" x="460" y="140" text-anchor="middle">{lb("gateway")}</text>
+            <rect class="sh" x="180" y="116" width="140" height="38" rx="3" />
+            <text class="tx" x="250" y="140" text-anchor="middle">{lb("scada")}</text>
+            <g class="mk" transform="translate(522 116)" aria-hidden="true"><circle r="11" /><text y="4.5" text-anchor="middle">1</text></g>
+          </a>
+
+          <!-- 2: Wave trap, coupling capacitor, PLCC panel, line -->
+          <a href={at(1)} aria-label={al(1)} class={cls(1)} data-hs="1">
+            <rect class="ring" x="418" y="426" width="584" height="90" rx="4" />
+            <rect class="hit" x="420" y="430" width="580" height="84" />
+            <path class="ln" d="M420 458H480M536 458H1000" stroke-width="3" />
+            <rect class="sh" x="480" y="449" width="56" height="18" rx="2" />
+            <path class="ln" d="M486 458q4-8 8 0q4-8 8 0q4-8 8 0q4-8 8 0q4-8 8 0q4-8 8 0" />
+            <text class="tx sm" x="508" y="440" text-anchor="middle">{lb("waveTrap")}</text>
+            <path class="ln" d="M590 458V474M578 474H602M578 480H602M590 480V494H630" />
+            <text class="tx sm" x="574" y="498" text-anchor="end">{lb("coupling")}</text>
+            <rect class="sh" x="630" y="478" width="130" height="32" rx="3" />
+            <text class="tx" x="695" y="499" text-anchor="middle">{lb("plcc")}</text>
+            <text class="tx sm" x="610" y="446">{lb("line")}</text>
+            <path class="ln" d="M836 490L847 436H853L864 490M834 446H866M840 470H860M838 446V458M862 446V458" />
+            <path class="ln" d="M926 490L937 436H943L954 490M924 446H956M930 470H950M928 446V458M952 446V458" />
+            <g class="mk" transform="translate(762 478)" aria-hidden="true"><circle r="11" /><text y="4.5" text-anchor="middle">2</text></g>
+          </a>
+
+          <!-- 3: Protection relays / C&R panel -->
+          <a href={at(2)} aria-label={al(2)} class={cls(2)} data-hs="2">
+            <rect class="ring" x="414" y="204" width="418" height="98" rx="4" />
+            <rect class="sh" x="420" y="210" width="400" height="86" rx="3" />
+            <text class="tx sm" x="432" y="228">{lb("crPanel")}</text>
+            <rect class="sh2" x="634" y="238" width="170" height="46" rx="3" />
+            <text class="tx" x="719" y="266" text-anchor="middle">{lb("relay")}</text>
+            <g class="mk" transform="translate(820 210)" aria-hidden="true"><circle r="11" /><text y="4.5" text-anchor="middle">3</text></g>
+          </a>
+
+          <!-- 4: GPS clock, Ethernet switch, BCU hardware -->
+          <a href={at(3)} aria-label={al(3)} class={cls(3)} data-hs="3">
+            <rect class="ring" x="594" y="110" width="352" height="50" rx="4" />
+            <rect class="ring" x="430" y="232" width="182" height="58" rx="4" />
+            <rect class="sh" x="600" y="116" width="140" height="38" rx="3" />
+            <text class="tx" x="670" y="140" text-anchor="middle">{lb("switch")}</text>
+            <rect class="sh" x="820" y="116" width="120" height="38" rx="3" />
+            <text class="tx" x="880" y="140" text-anchor="middle">{lb("gps")}</text>
+            <rect class="sh2" x="436" y="238" width="170" height="46" rx="3" />
+            <text class="tx" x="521" y="266" text-anchor="middle">{lb("bcu")}</text>
+            <g class="mk" transform="translate(942 116)" aria-hidden="true"><circle r="11" /><text y="4.5" text-anchor="middle">4</text></g>
+          </a>
+
+          <!-- 5: Bay equipment CB, CT, PT -->
+          <a href={at(4)} aria-label={al(4)} class={cls(4)} data-hs="4">
+            <rect class="ring" x="240" y="354" width="184" height="160" rx="4" />
+            <rect class="hit" x="244" y="358" width="176" height="152" />
+            <path class="ln" d="M300 345V458H420" stroke-width="3" />
+            <rect class="sh" x="289" y="372" width="22" height="22" />
+            <ellipse class="ln" cx="300" cy="416" rx="13" ry="6" fill="none" />
+            <ellipse class="ln" cx="300" cy="428" rx="13" ry="6" fill="none" />
+            <text class="tx sm" x="280" y="388" text-anchor="end">{lb("cb")}</text>
+            <text class="tx sm" x="280" y="426" text-anchor="end">{lb("ct")}</text>
+            <path class="ln" d="M380 458V475M380 495V503M372 503H388M375 507H385M378 511H382" />
+            <circle class="sh" cx="380" cy="485" r="10" />
+            <text class="tx sm" x="364" y="490" text-anchor="end">{lb("pt")}</text>
+            <circle class="dot-ln" cx="300" cy="345" r="3.5" />
+            <g class="mk" transform="translate(340 444)" aria-hidden="true"><circle r="11" /><text y="4.5" text-anchor="middle">5</text></g>
+          </a>
+
+          <!-- 6: Communication links -->
+          <a href={at(5)} aria-label={al(5)} class={cls(5)} data-hs="5">
+            <rect class="ring" x="238" y="54" width="662" height="160" rx="4" />
+            <path class="hit-l" d="M460 60V116M250 154V178M460 154V178M670 154V210M880 154V178M250 178H880" />
+            <path class="cm" d="M460 60V116" />
+            <path class="cm" d="M250 154V178M460 154V178M880 154V178M250 178H880" />
+            <path class="cm" d="M670 154V210" />
+            <text class="tx sm" x="472" y="92">{lb("link104")}</text>
+            <text class="tx sm" x="262" y="170">{lb("link61850")}</text>
+            <g class="mk" transform="translate(790 178)" aria-hidden="true"><circle r="11" /><text y="4.5" text-anchor="middle">6</text></g>
+          </a>
+
+          <!-- 7: Whole-station 24/7 -->
+          <a href={at(6)} aria-label={al(6)} class={cls(6)} data-hs="6">
+            <rect class="ring" x="138" y="82" width="104" height="36" rx="4" />
+            <rect class="hit-l" x="128" y="100" width="872" height="414" rx="10" fill="none" />
+            <rect class="out" x="128" y="100" width="872" height="414" rx="10" />
+            <rect class="sh" x="146" y="89" width="62" height="22" rx="11" />
+            <text class="tx bd" x="177" y="104.500" text-anchor="middle">{lb("badge")}</text>
+            <g class="mk" transform="translate(226 100)" aria-hidden="true"><circle r="11" /><text y="4.5" text-anchor="middle">7</text></g>
+          </a>
+        </svg>
+      </div>
+
+      <div class="dg-chips">
+        {items.map((it) => (
+          <button type="button" class="chip" data-chip={it.i} aria-pressed={it.i === 0 ? "true" : "false"}>
+            <span class="chip-n" aria-hidden="true">{it.n}</span>
+            <span>{it.short}</span>
+          </button>
+        ))}
+      </div>
+      <p class="dg-hint">{hint}</p>
+    </div>
+
+    <div class="dg-panel" data-live aria-live="off">
+      {items.map((it) => (
+        <article data-panel={it.i} hidden={it.i !== 0}>
+          <div class="p-head">
+            <span class="p-num" aria-hidden="true">{it.n}</span>
+            <span class="p-icon"><Icon name={it.icon} size={28} /></span>
+          </div>
+          <h3>{it.title}</h3>
+          <p>{it.summary}</p>
+          <a class="p-link" href={it.href}>
+            <span>{viewService}</span>
+            <Icon name="arrow-right" size={18} />
+            <span class="sr-only">: {it.title}</span>
+          </a>
+        </article>
+      ))}
+    </div>
+  </div>
+
+  <ul class="dg-mob">
+    {items.map((it) => (
+      <li>
+        <a class="row" href={it.href}>
+          <span class="r-num" aria-hidden="true">{it.n}</span>
+          <span class="r-icon"><Icon name={it.icon} size={24} /></span>
+          <span class="r-text">
+            <strong>{it.title}</strong>
+            <span>{it.summary}</span>
+          </span>
+          <Icon name="arrow-right" size={20} class="r-arrow" />
+        </a>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .dg {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .dg-desk { display: none; }
+  @media (min-width: 768px) {
+    .dg-desk { display: grid; grid-template-columns: 2fr 1fr; }
+    .dg-mob { display: none; }
+  }
+  .dg-main { padding: 16px 16px 20px; min-width: 0; }
+  .dg-svg { display: block; width: 100%; height: auto; }
+
+  /* SVG text */
+  .tx { font-family: var(--font-body); font-size: 14px; fill: var(--ink); }
+  .tx.sm { font-size: 13px; fill: var(--muted); }
+  .tx.bd { font-weight: 600; font-size: 13px; }
+  .lv { font-family: var(--font-body); font-size: 13px; font-weight: 600; fill: var(--muted); }
+
+  /* non-selectable linework */
+  .pw { stroke: var(--ink); fill: none; stroke-linecap: butt; }
+  .hw { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+  .dot { fill: var(--muted); }
+  .ctx { fill: var(--surface); stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: 5 3; }
+
+  /* hotspots */
+  .hs { cursor: pointer; outline: none; }
+  .hs .sh, .hs .sh2 { fill: var(--surface); stroke: var(--ink); stroke-width: 1.75; transition: fill 150ms, stroke 150ms; }
+  .hs .sh2 { fill: var(--paper); }
+  .hs .ln { stroke: var(--ink); stroke-width: 1.75; fill: none; stroke-linecap: round; stroke-linejoin: round; transition: stroke 150ms; }
+  .hs .ln[stroke-width="3"] { stroke-linecap: butt; }
+  .hs .dot-ln { fill: var(--ink); }
+  .hs .hit { fill: transparent; }
+  .hs .hit-l { fill: none; stroke: transparent; stroke-width: 16; pointer-events: stroke; }
+  .hs .out { fill: none; stroke: var(--muted); stroke-width: 2; stroke-dasharray: 2 6; stroke-linecap: round; transition: stroke 150ms; }
+  .hs .cm { fill: none; stroke: var(--slate); stroke-width: 2.25; stroke-dasharray: 7 6; animation: dg-flow 3s linear infinite; transition: stroke 150ms; }
+  .hs .ring { fill: none; stroke: var(--slate); stroke-width: 2; stroke-dasharray: 6 4; opacity: 0; pointer-events: none; }
+  .hs:focus-visible .ring { opacity: 1; }
+  .hs .mk circle { fill: var(--surface); stroke: var(--ink); stroke-width: 1.5; transition: fill 150ms, stroke 150ms; }
+  .hs .mk text { font-family: var(--font-body); font-size: 13px; font-weight: 600; fill: var(--ink); }
+
+  .hs.is-active .sh, .hs.is-active .sh2 { stroke: var(--red); fill: var(--red-tint); }
+  .hs.is-active .ln, .hs.is-active .cm, .hs.is-active .out { stroke: var(--red); }
+  .hs.is-active .dot-ln { fill: var(--red); }
+  .hs.is-active .mk circle { fill: var(--red); stroke: var(--red); }
+  .hs.is-active .mk text { fill: #fff; }
+
+  @keyframes dg-flow { to { stroke-dashoffset: -26; } }
+  @media (prefers-reduced-motion: reduce) {
+    .hs .cm { animation: none; }
+    .hs .sh, .hs .sh2, .hs .ln, .hs .mk circle { transition: none; }
+  }
+
+  /* chips */
+  .dg-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    min-height: 44px; padding: 6px 14px 6px 8px;
+    background: var(--surface); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 999px;
+    font-family: var(--font-body); font-size: 15px; font-weight: 500; line-height: 1.2;
+    cursor: pointer;
+  }
+  .chip:hover { border-color: var(--ink); }
+  .chip:focus-visible { outline: 2px solid var(--slate); outline-offset: 2px; }
+  .chip-n {
+    display: inline-grid; place-items: center; width: 26px; height: 26px; flex: none;
+    border-radius: 50%; border: 1.5px solid var(--ink);
+    font-size: 13px; font-weight: 600;
+  }
+  .chip[aria-pressed="true"] { border-color: var(--red); background: var(--red-tint); }
+  .chip[aria-pressed="true"] .chip-n { background: var(--red); border-color: var(--red); color: #fff; }
+  .dg-hint { margin-top: 12px; font-size: 14px; color: var(--muted); }
+
+  /* info panel */
+  .dg-panel { padding: 28px 24px; border-left: 1px solid var(--line); background: var(--paper); min-width: 0; }
+  .p-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .p-num {
+    display: grid; place-items: center; width: 34px; height: 34px;
+    border-radius: 50%; background: var(--red); color: #fff;
+    font-weight: 600; font-size: 16px;
+  }
+  .p-icon { color: var(--slate); display: inline-flex; }
+  .dg-panel h3 { margin-bottom: 8px; }
+  .dg-panel p { color: var(--muted); font-size: 16px; line-height: 1.55; }
+  .p-link {
+    display: inline-flex; align-items: center; gap: 8px; margin-top: 20px;
+    min-height: 44px; font-weight: 600; color: var(--red-ink); text-decoration: none;
+  }
+  .p-link:hover span:first-child { text-decoration: underline; text-underline-offset: 3px; }
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+
+  /* mobile list */
+  .dg-mob { list-style: none; margin: 0; padding: 0; }
+  .dg-mob li + li { border-top: 1px solid var(--line); }
+  .row {
+    display: flex; align-items: center; gap: 12px;
+    min-height: 56px; padding: 14px 16px; width: 100%;
+    color: var(--ink); text-decoration: none;
+  }
+  .row:focus-visible { outline: 2px solid var(--slate); outline-offset: -2px; }
+  .r-num {
+    display: grid; place-items: center; flex: none; width: 28px; height: 28px;
+    border-radius: 50%; background: var(--red); color: #fff; font-size: 14px; font-weight: 600;
+  }
+  .r-icon { color: var(--slate); display: inline-flex; flex: none; }
+  .r-text { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+  .r-text strong { font-weight: 600; font-size: 16px; line-height: 1.3; }
+  .r-text span {
+    font-size: 14px; color: var(--muted); line-height: 1.4;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .row :global(.r-arrow) { flex: none; color: var(--red-ink); }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-diagram]").forEach((root) => {
+    if (root.dataset.ready) return;
+    root.dataset.ready = "1";
+
+    const hs = Array.from(root.querySelectorAll<SVGAElement>("[data-hs]"));
+    const chips = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-chip]"));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>("[data-panel]"));
+    const live = root.querySelector<HTMLElement>("[data-live]");
+    let active = 0;
+    let timer: number | undefined;
+
+    const set = (i: number) => {
+      active = i;
+      hs.forEach((a, k) => a.classList.toggle("is-active", k === i));
+      chips.forEach((c, k) => c.setAttribute("aria-pressed", String(k === i)));
+      panels.forEach((p, k) => { p.hidden = k !== i; });
+    };
+
+    const stop = () => {
+      if (timer !== undefined) {
+        window.clearInterval(timer);
+        timer = undefined;
+      }
+      live?.setAttribute("aria-live", "polite");
+    };
+
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const wide = window.matchMedia("(min-width: 768px)");
+    if (!reduce && hs.length > 1) {
+      timer = window.setInterval(() => {
+        if (wide.matches) set((active + 1) % hs.length);
+      }, 4000);
+    }
+
+    root.addEventListener("pointerenter", stop);
+    root.addEventListener("pointerdown", stop);
+    root.addEventListener("focusin", stop);
+    root.addEventListener("click", stop);
+
+    hs.forEach((a, i) => {
+      let touchFirst = false;
+      a.addEventListener("pointerdown", (e) => {
+        touchFirst = e.pointerType === "touch" && active !== i;
+      });
+      a.addEventListener("pointerenter", () => set(i));
+      a.addEventListener("focus", () => set(i));
+      a.addEventListener("click", (e) => {
+        if (touchFirst) e.preventDefault();
+        touchFirst = false;
+        set(i);
+      });
+    });
+
+    chips.forEach((c, i) => c.addEventListener("click", () => set(i)));
+  });
+</script>

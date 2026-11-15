@@ -38,3 +38,16 @@ export function switchLangPath(url: URL): string {
   const stripped = url.pathname.replace(/^\/hi(?=\/|$)/, "") || "/";
   return localizedPath(target, stripped);
 }
+
+/** Raw-value lookup (arrays/objects) with English fallback. Returns undefined-cast if missing. */
+export function tx<T = unknown>(lang: Lang, key: string): T {
+  const get = (dict: Record<string, unknown>): unknown => {
+    let node: unknown = dict;
+    for (const part of key.split(".")) {
+      if (typeof node !== "object" || node === null || !(part in node)) return undefined;
+      node = (node as Record<string, unknown>)[part];
+    }
+    return node;
+  };
+  return (get(dictionaries[lang]) ?? get(dictionaries.en)) as T;
+}

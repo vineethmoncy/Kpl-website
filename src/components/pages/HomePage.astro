@@ -1,0 +1,26 @@
+---
+import Base from "../../layouts/Base.astro";
+import Hero from "../home/Hero.astro";
+import DiagramSection from "../home/DiagramSection.astro";
+import Services from "../home/Services.astro";
+import Why from "../home/Why.astro";
+import Tech from "../home/Tech.astro";
+import Clients from "../home/Clients.astro";
+import Breakdown from "../home/Breakdown.astro";
+import Contact from "../home/Contact.astro";
+import { site } from "../../data/site";
+import type { Lang } from "../../i18n/utils";
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+---
+
+<Base title={site.name} lang={lang}>
+  <Hero lang={lang} />
+  <DiagramSection lang={lang} />
+  <Services lang={lang} />
+  <Why lang={lang} />
+  <Tech lang={lang} />
+  <Clients lang={lang} />
+  <Breakdown lang={lang} />
+  <Contact lang={lang} />
+</Base>

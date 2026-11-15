@@ -1,0 +1,42 @@
+---
+import Section from "../Section.astro";
+import Reveal from "../Reveal.astro";
+import Button from "../Button.astro";
+import Icon from "../Icon.astro";
+import { t, localizedPath, type Lang } from "../../i18n/utils";
+import { loc } from "../../data/types";
+import { site } from "../../data/site";
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+---
+
+<Section id="contact" tone="paper" title={t(lang, "home.contact.title")} sub={t(lang, "home.contact.sub")}>
+  <Reveal>
+    <div class="grid gap-4 md:grid-cols-3">
+      <div class="tile">
+        <Icon name="phone" size={26} class="text-red-ink" />
+        <h3 class="mt-3 text-base uppercase tracking-wider text-slate">{t(lang, "contact.phone")}</h3>
+        <a href={site.phoneHref} class="link mt-1 text-xl font-semibold">{site.phone}</a>
+      </div>
+      <div class="tile">
+        <Icon name="mail" size={26} class="text-red-ink" />
+        <h3 class="mt-3 text-base uppercase tracking-wider text-slate">{t(lang, "contact.email")}</h3>
+        <a href={`mailto:${site.email}`} class="link mt-1 break-all text-xl font-semibold">{site.email}</a>
+      </div>
+      <div class="tile">
+        <Icon name="pin" size={26} class="text-red-ink" />
+        <h3 class="mt-3 text-base uppercase tracking-wider text-slate">{t(lang, "contact.address")}</h3>
+        <p class="mt-1">{loc(site.address, lang)}</p>
+        <a href={site.mapHref} class="link mt-1 font-semibold" target="_blank" rel="noopener noreferrer">{t(lang, "contact.map")}</a>
+      </div>
+    </div>
+    <div class="mt-8">
+      <Button href={localizedPath(lang, "/contact/")} size="lg">{t(lang, "cta.getInTouch")}</Button>
+    </div>
+  </Reveal>
+</Section>
+
+<style>
+  .tile { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 24px; }
+  .link { display: inline-flex; align-items: center; min-height: 44px; }
+</style>

@@ -1,0 +1,49 @@
+---
+import type { Lang } from "../i18n/utils";
+import { loc, type L } from "../data/types";
+interface Props { value: number; suffix?: string; label: L; lang: Lang }
+const { value, suffix = "", label, lang } = Astro.props;
+---
+
+<div class="stat" data-stat data-value={value} data-suffix={suffix}>
+  <p class="stat-num font-head text-red-ink" data-stat-num>{value}{suffix}</p>
+  <p class="mt-1 text-sm text-muted">{loc(label, lang)}</p>
+</div>
+
+<style>
+  .stat { border-top: 2px solid var(--line); padding-top: 14px; }
+  .stat-num {
+    font-size: clamp(40px, 5vw, 56px);
+    font-weight: 700;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+</style>
+
+<script>
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const els = document.querySelectorAll<HTMLElement>("[data-stat]");
+  if (!reduce && "IntersectionObserver" in window && els.length) {
+    const run = (el: HTMLElement) => {
+      const target = Number(el.dataset.value);
+      const suffix = el.dataset.suffix ?? "";
+      const out = el.querySelector<HTMLElement>("[data-stat-num]")!;
+      const start = performance.now();
+      const dur = 1200;
+      const tick = (now: number) => {
+        const p = Math.min((now - start) / dur, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        out.textContent = Math.round(target * eased) + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      out.textContent = "0" + suffix;
+      requestAnimationFrame(tick);
+    };
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) { io.unobserve(e.target); run(e.target as HTMLElement); }
+      }
+    }, { threshold: 0.4 });
+    els.forEach((el) => io.observe(el));
+  }
+</script>

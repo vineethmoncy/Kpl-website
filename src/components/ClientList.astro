@@ -1,0 +1,15 @@
+---
+import { loc, type L } from "../data/types";
+import type { Lang } from "../i18n/utils";
+interface Props { heading: string; items: L[]; lang: Lang }
+const { heading, items, lang } = Astro.props;
+---
+
+<div>
+  <h3 class="border-b-2 border-slate pb-3">{heading}</h3>
+  <ul class="m-0 list-none p-0">
+    {items.map((c) => (
+      <li class="border-b border-line py-3">{loc(c, lang)}</li>
+    ))}
+  </ul>
+</div>

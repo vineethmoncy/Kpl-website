@@ -1,0 +1,44 @@
+---
+import Button from "../Button.astro";
+import Reveal from "../Reveal.astro";
+import StatCounter from "../StatCounter.astro";
+import { t, localizedPath, type Lang } from "../../i18n/utils";
+import { loc } from "../../data/types";
+import { stats } from "../../data/stats";
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const [years, plcc, voltage] = stats;
+const chips = [
+  t(lang, "home.hero.voltage").replace("{max}", `${voltage.value}${voltage.suffix}`),
+  `${plcc.value}${plcc.suffix} ${loc(plcc.label, lang)}`,
+  `${years.value}${years.suffix} ${loc(years.label, lang)}`,
+];
+---
+
+<section class="bg-paper section-y">
+  <div class="container-x grid items-center gap-10 lg:grid-cols-12 lg:gap-12">
+    <div class="lg:col-span-5">
+      <Reveal>
+        <p class="flex items-center gap-3 text-sm font-semibold uppercase tracking-wider text-slate">
+          <span class="h-0.5 w-8 bg-red" aria-hidden="true"></span>{t(lang, "home.hero.eyebrow")}
+        </p>
+        <h1 class="mt-4">{t(lang, "home.hero.title")}</h1>
+        <p class="mt-5 text-lg text-muted">{t(lang, "home.hero.sub")}</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <Button href={localizedPath(lang, "/contact/")} size="lg">{t(lang, "cta.discuss")}</Button>
+          <Button href={localizedPath(lang, "/services/")} variant="secondary" size="lg">{t(lang, "cta.services")}</Button>
+        </div>
+        <ul class="m-0 mt-8 flex list-none flex-wrap gap-2 p-0">
+          {chips.map((c) => (
+            <li class="rounded-md border border-line bg-surface px-3 py-1.5 text-sm font-medium text-ink">{c}</li>
+          ))}
+        </ul>
+      </Reveal>
+    </div>
+    <div class="lg:col-span-6 lg:col-start-7">
+      <div class="grid grid-cols-2 gap-x-6 gap-y-8 sm:gap-x-10 sm:gap-y-10">
+        {stats.map((s) => <StatCounter value={s.value} suffix={s.suffix} label={s.label} lang={lang} />)}
+      </div>
+    </div>
+  </div>
+</section>

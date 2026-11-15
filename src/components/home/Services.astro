@@ -1,0 +1,28 @@
+---
+import Section from "../Section.astro";
+import Reveal from "../Reveal.astro";
+import ServiceCard from "../ServiceCard.astro";
+import Button from "../Button.astro";
+import { t, localizedPath, type Lang } from "../../i18n/utils";
+import { services } from "../../data/services";
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+---
+
+<Section id="services" tone="paper" title={t(lang, "home.services.title")} sub={t(lang, "home.services.sub")}>
+  <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    {services.map((s, i) => (
+      <Reveal delay={(i % 3) * 60} class="h-full"><ServiceCard service={s} lang={lang} /></Reveal>
+    ))}
+    <Reveal class="h-full">
+      <div class="flex h-full flex-col justify-center rounded-lg border border-dashed border-slate/50 p-6">
+        <h3>{t(lang, "home.services.allTitle")}</h3>
+        <p class="mt-2 text-base text-muted">{t(lang, "home.services.allText")}</p>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <Button href={localizedPath(lang, "/services/")} variant="secondary">{t(lang, "cta.allServices")}</Button>
+          <Button href={localizedPath(lang, "/contact/")} variant="ghost">{t(lang, "cta.getInTouch")}</Button>
+        </div>
+      </div>
+    </Reveal>
+  </div>
+</Section>

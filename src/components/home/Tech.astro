@@ -1,0 +1,38 @@
+---
+import Section from "../Section.astro";
+import Reveal from "../Reveal.astro";
+import { t, type Lang } from "../../i18n/utils";
+import { oems } from "../../data/oems";
+import { protocols } from "../../data/protocols";
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const groups = [
+  { label: t(lang, "home.tech.oems"), items: oems, mono: false },
+  { label: t(lang, "home.tech.protocols"), items: protocols, mono: true },
+];
+---
+
+<Section id="tech" tone="paper" title={t(lang, "home.tech.title")}>
+  <Reveal>
+    <div class="grid gap-8">
+      {groups.map((g) => (
+        <div class="grid gap-3 md:grid-cols-[160px_1fr] md:items-start">
+          <h3 class="text-base uppercase tracking-wider text-slate md:pt-2">{g.label}</h3>
+          <ul class="m-0 flex list-none flex-wrap gap-2 p-0">
+            {g.items.map((i) => (
+              <li class:list={["rounded-md border border-line bg-surface px-4 py-2 font-medium", g.mono && "chip-mono"]}>{i}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </Reveal>
+</Section>
+
+<style>
+  .chip-mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 15px;
+    font-variant-numeric: tabular-nums;
+  }
+</style>

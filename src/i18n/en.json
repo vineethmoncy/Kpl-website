@@ -41,7 +41,8 @@
     "hero": {
       "eyebrow": "System integrator, 66kV to 400kV",
       "title": "Substation automation, SCADA, PLCC and protection systems.",
-      "sub": "KPL Power Systems has delivered for state utilities and industry across India for 15+ years. We work with Siemens, ABB, GE, ZIV, Alstom, CG, Sifang and ERL equipment."
+      "sub": "KPL Power Systems has delivered for state utilities and industry across India for 15+ years. We work with Siemens, ABB, GE, ZIV, Alstom, CG, Sifang and ERL equipment.",
+      "voltage": "66kV to {max}"
     },
     "diagram": {
       "title": "Where KPL works in your substation",
@@ -50,7 +51,9 @@
     },
     "services": {
       "title": "Our services",
-      "sub": "Automation, communication and protection work from design to ongoing support."
+      "sub": "Automation, communication and protection work from design to ongoing support.",
+      "allTitle": "Not sure which service you need?",
+      "allText": "Browse every service, or describe your requirement and we will point you to the right team."
     },
     "why": {
       "title": "Why utilities and plants call KPL",

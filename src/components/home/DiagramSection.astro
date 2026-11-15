@@ -1,0 +1,11 @@
+---
+import Section from "../Section.astro";
+import SubstationDiagram from "../SubstationDiagram.astro";
+import { t, type Lang } from "../../i18n/utils";
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+---
+
+<Section id="diagram" tone="surface" title={t(lang, "home.diagram.title")} sub={t(lang, "home.diagram.sub")}>
+  <SubstationDiagram lang={lang} />
+</Section>

@@ -1,0 +1,52 @@
+---
+import Icon from "./Icon.astro";
+import { t, localizedPath, type Lang } from "../i18n/utils";
+import { loc } from "../data/types";
+import type { Service } from "../data/services";
+interface Props { service: Service; lang: Lang }
+const { service, lang } = Astro.props;
+---
+
+<a href={localizedPath(lang, `/services/${service.slug}/`)} class="svc group">
+  <span class="svc-icon"><Icon name={service.icon} size={26} /></span>
+  <h3 class="mt-4">{loc(service.title, lang)}</h3>
+  <p class="mt-2 text-muted text-base">{loc(service.summary, lang)}</p>
+  <span class="svc-link mt-auto pt-4">
+    {t(lang, "cta.viewService")} <Icon name="arrow-right" size={18} />
+  </span>
+</a>
+
+<style>
+  .svc {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: var(--ink);
+    text-decoration: none;
+    transition: border-color 150ms;
+  }
+  .svc:hover { border-color: var(--slate); text-decoration: none; }
+  .svc-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    background: var(--red-tint);
+    color: var(--red-ink);
+  }
+  .svc-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    font-weight: 600;
+    color: var(--red-ink);
+  }
+  .svc:hover .svc-link { text-decoration: underline; text-underline-offset: 3px; }
+</style>

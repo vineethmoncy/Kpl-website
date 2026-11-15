@@ -1,22 +1,4 @@
 ---
-import Base from "../../layouts/Base.astro";
-import Section from "../../components/Section.astro";
-import Reveal from "../../components/Reveal.astro";
-import Button from "../../components/Button.astro";
-import { t, localizedPath } from "../../i18n/utils";
-import { site } from "../../data/site";
-
-const lang = "hi";
+import HomePage from "../../components/pages/HomePage.astro";
 ---
-
-<Base title={site.name} lang={lang}>
-  <Section tone="paper">
-    <Reveal>
-      <h1>{site.name}</h1>
-      <div class="mt-8 flex flex-wrap gap-3">
-        <Button href={localizedPath(lang, "/contact/")} size="lg">{t(lang, "cta.discuss")}</Button>
-        <Button href={localizedPath(lang, "/services/")} variant="secondary" size="lg">{t(lang, "cta.services")}</Button>
-      </div>
-    </Reveal>
-  </Section>
-</Base>
+<HomePage lang="hi" />
