@@ -1,0 +1,12 @@
+{
+  "site": {
+    "name": "KPL Power Systems"
+  },
+  "nav": {
+    "home": "होम",
+    "services": "सेवाएँ",
+    "experience": "अनुभव",
+    "about": "हमारे बारे में",
+    "contact": "संपर्क"
+  }
+}

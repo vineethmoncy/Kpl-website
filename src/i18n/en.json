@@ -1,0 +1,12 @@
+{
+  "site": {
+    "name": "KPL Power Systems"
+  },
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "experience": "Experience",
+    "about": "About",
+    "contact": "Contact"
+  }
+}

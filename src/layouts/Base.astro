@@ -1,0 +1,26 @@
+---
+import "../styles/global.css";
+import type { Lang } from "../i18n/utils";
+
+interface Props {
+  title: string;
+  description?: string;
+  lang?: Lang;
+}
+
+const { title, description, lang = "en" } = Astro.props;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="icon" href="/logo.png" />
+  </head>
+  <body class:list={[{ "lang-hi": lang === "hi" }]}>
+    <slot />
+  </body>
+</html>

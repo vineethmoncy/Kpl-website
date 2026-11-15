@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+/* Self-hosted fonts (default per-weight files include latin, latin-ext and devanagari subsets) */
+@import "@fontsource/barlow-semi-condensed/600.css";
+@import "@fontsource/barlow-semi-condensed/700.css";
+@import "@fontsource/hind/400.css";
+@import "@fontsource/hind/500.css";
+@import "@fontsource/hind/600.css";
+@import "@fontsource/mukta/600.css";
+@import "@fontsource/mukta/700.css";
+
+:root {
+  --red: #DC2C1F;
+  --red-ink: #C0261A;
+  --red-tint: #FDEDEB;
+  --ink: #1A1F26;
+  --muted: #566170;
+  --slate: #2E4756;
+  --line: #E2E6EA;
+  --paper: #FAFAF8;
+  --surface: #FFFFFF;
+  --font-head: "Barlow Semi Condensed", system-ui, sans-serif;
+  --font-body: "Hind", system-ui, sans-serif;
+  --font-head-hi: "Mukta", "Hind", sans-serif;
+  color-scheme: light;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.6;
+}

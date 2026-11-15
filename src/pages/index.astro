@@ -1,0 +1,14 @@
+---
+import Base from "../layouts/Base.astro";
+import { t } from "../i18n/utils";
+
+const lang = "en";
+const navLabels = ["home", "services", "experience", "about", "contact"].map((k) => t(lang, `nav.${k}`));
+---
+
+<Base title={t(lang, "site.name")} lang={lang}>
+  <main>
+    <h1>{t(lang, "site.name")}</h1>
+    <p>{navLabels.join(" · ")}</p>
+  </main>
+</Base>
