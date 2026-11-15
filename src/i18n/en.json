@@ -7,7 +7,8 @@
     "services": "Services",
     "experience": "Experience",
     "about": "About",
-    "contact": "Contact"
+    "contact": "Contact",
+    "breadcrumb": "Breadcrumb"
   },
   "header": {
     "skip": "Skip to content",
@@ -118,7 +119,10 @@
       "Greenfield and brownfield substation projects"
     ],
     "clientsTitle": "Clients",
-    "projectsTitle": "Selected projects"
+    "projectsTitle": "Selected projects",
+    "location": "Location",
+    "scope": "Scope",
+    "year": "Year"
   },
   "about": {
     "title": "About KPL Power Systems",

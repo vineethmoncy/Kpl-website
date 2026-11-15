@@ -3,16 +3,18 @@ import Base from "../layouts/Base.astro";
 import Section from "../components/Section.astro";
 import Button from "../components/Button.astro";
 import { t, localizedPath } from "../i18n/utils";
+import { site } from "../data/site";
 
 const lang = "en";
+const title = t(lang, "notFound.title");
 ---
 
-<Base title="404" lang={lang}>
+<Base title={`${title} | ${site.name}`} description={t(lang, "notFound.text")} lang={lang}>
   <Section tone="paper">
-    <h1>404</h1>
-    <div class="mt-8 flex flex-wrap gap-3">
-      <Button href={localizedPath(lang, "/")}>{t(lang, "nav.home")}</Button>
-      <Button href={localizedPath(lang, "/contact/")} variant="secondary">{t(lang, "nav.contact")}</Button>
+    <h1>{title}</h1>
+    <p class="mt-4 max-w-3xl text-lg text-muted">{t(lang, "notFound.text")}</p>
+    <div class="mt-8">
+      <Button href={localizedPath(lang, "/")} size="lg">{t(lang, "notFound.home")}</Button>
     </div>
   </Section>
 </Base>

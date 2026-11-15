@@ -1,0 +1,106 @@
+---
+import Base from "../../layouts/Base.astro";
+import PageHeader from "../PageHeader.astro";
+import Section from "../Section.astro";
+import Reveal from "../Reveal.astro";
+import ServiceCard from "../ServiceCard.astro";
+import CtaBand from "../CtaBand.astro";
+import Icon from "../Icon.astro";
+import Button from "../Button.astro";
+import { t, localizedPath, type Lang } from "../../i18n/utils";
+import { loc } from "../../data/types";
+import { site } from "../../data/site";
+import { getService, type Service } from "../../data/services";
+interface Props { lang: Lang; service: Service }
+const { lang, service } = Astro.props;
+const title = loc(service.title, lang);
+const summary = loc(service.summary, lang);
+const related = service.related
+  .map((slug) => getService(slug))
+  .filter((s): s is Service => Boolean(s));
+---
+
+<Base title={`${title} | ${site.name}`} description={summary} lang={lang}>
+  <PageHeader
+    lang={lang}
+    title={title}
+    sub={summary}
+    icon={service.icon}
+    breadcrumb={[
+      { label: t(lang, "nav.home"), href: "/" },
+      { label: t(lang, "nav.services"), href: "/services/" },
+      { label: title },
+    ]}
+  />
+
+  <Section tone="paper">
+    <div class="grid gap-10 lg:grid-cols-3 lg:gap-12">
+      <div class="lg:col-span-2">
+        <h2>{t(lang, "services.scope")}</h2>
+        <ul class="m-0 mt-6 list-none p-0">
+          {service.scope.map((item) => (
+            <li class="flex gap-4 border-t border-line py-4 last:border-b">
+              <span class="mt-0.5 shrink-0 text-red-ink"><Icon name="check" size={24} /></span>
+              <span>{loc(item, lang)}</span>
+            </li>
+          ))}
+        </ul>
+        {service.note && (
+          <div class="mt-8 rounded-lg bg-red-tint p-5">
+            <p class="m-0 font-medium text-ink">{loc(service.note, lang)}</p>
+          </div>
+        )}
+      </div>
+
+      <aside class="lg:col-span-1">
+        <div class="side rounded-lg border border-line bg-surface p-6 lg:sticky lg:top-24">
+          {service.oems && (
+            <div>
+              <h3 class="text-base uppercase tracking-wider text-slate">{t(lang, "services.oems")}</h3>
+              <ul class="m-0 mt-3 flex list-none flex-wrap gap-2 p-0">
+                {service.oems.map((o) => (
+                  <li class="rounded-md border border-line bg-paper px-3 py-1.5 font-medium">{o}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {service.protocols && (
+            <div class:list={[service.oems && "mt-6"]}>
+              <h3 class="text-base uppercase tracking-wider text-slate">{t(lang, "services.protocols")}</h3>
+              <ul class="m-0 mt-3 flex list-none flex-wrap gap-2 p-0">
+                {service.protocols.map((p) => (
+                  <li class="chip-mono rounded-md border border-line bg-paper px-3 py-1.5">{p}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          <div class:list={[(service.oems || service.protocols) && "mt-6", "flex flex-col gap-4"]}>
+            <Button href={localizedPath(lang, "/contact/")} size="lg" class="w-full">{t(lang, "cta.discuss")}</Button>
+            <a href={site.phoneHref} class="phone inline-flex min-h-11 items-center justify-center gap-2 font-semibold text-slate">
+              <Icon name="phone" size={20} />{site.phone}
+            </a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </Section>
+
+  <Section tone="surface" title={t(lang, "services.related")}>
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {related.map((s, i) => (
+        <Reveal delay={(i % 3) * 60} class="h-full"><ServiceCard service={s} lang={lang} /></Reveal>
+      ))}
+    </div>
+  </Section>
+
+  <CtaBand lang={lang} />
+</Base>
+
+<style>
+  .chip-mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 15px;
+    font-variant-numeric: tabular-nums;
+  }
+  .phone:hover { text-decoration: underline; }
+</style>

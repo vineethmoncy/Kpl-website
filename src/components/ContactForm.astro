@@ -1,0 +1,165 @@
+---
+import Button from "./Button.astro";
+import Icon from "./Icon.astro";
+import { t, tx, type Lang } from "../i18n/utils";
+import { site } from "../data/site";
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const types = tx<string[]>(lang, "contact.form.typeOptions");
+---
+
+<script>
+  // Web3Forms key is read at build time. With no key, the form never calls the network and shows the error state.
+  const KEY: string = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? "";
+  const form = document.getElementById("enquiry-form") as HTMLFormElement | null;
+
+  if (form) {
+    const root = form.parentElement as HTMLElement;
+    const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    const errorBox = form.querySelector<HTMLElement>("[data-error]")!;
+    const success = root.querySelector<HTMLElement>("[data-success]")!;
+    const idleLabel = submit.textContent?.trim() ?? "";
+    const sendingLabel = form.dataset.sending ?? "";
+    const requiredMsg = form.dataset.required ?? "";
+
+    // Native validation, with the translated required-field message.
+    form.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>("[required]").forEach((el) => {
+      el.addEventListener("invalid", () => {
+        el.setCustomValidity(el.validity.valueMissing ? requiredMsg : "");
+      });
+      el.addEventListener("input", () => el.setCustomValidity(""));
+    });
+
+    const setBusy = (busy: boolean) => {
+      submit.disabled = busy;
+      submit.textContent = busy ? sendingLabel : idleLabel;
+    };
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errorBox.hidden = true;
+      if (!KEY) {
+        errorBox.hidden = false;
+        return;
+      }
+
+      const fd = new FormData(form);
+      const payload = {
+        access_key: KEY,
+        subject: "Website enquiry - KPL Power Systems",
+        name: fd.get("name"),
+        organisation: fd.get("organisation"),
+        phone: fd.get("phone"),
+        email: fd.get("email"),
+        requirement: fd.get("requirement"),
+        message: fd.get("message"),
+        botcheck: fd.has("botcheck"),
+      };
+
+      setBusy(true);
+      try {
+        const res = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) throw new Error("Web3Forms rejected the submission");
+        form.hidden = true;
+        success.hidden = false;
+      } catch {
+        setBusy(false);
+        errorBox.hidden = false;
+      }
+    });
+  }
+</script>
+
+<div class="enquiry">
+  <form
+    id="enquiry-form"
+    method="post"
+    data-sending={t(lang, "contact.form.sending")}
+    data-required={t(lang, "contact.form.required")}
+  >
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div class="field sm:col-span-2">
+        <label for="f-name">{t(lang, "contact.form.name")}</label>
+        <input id="f-name" name="name" type="text" required autocomplete="name" />
+      </div>
+      <div class="field sm:col-span-2">
+        <label for="f-org">{t(lang, "contact.form.organisation")}</label>
+        <input id="f-org" name="organisation" type="text" autocomplete="organization" />
+      </div>
+      <div class="field">
+        <label for="f-phone">{t(lang, "contact.form.phone")}</label>
+        <input id="f-phone" name="phone" type="tel" required autocomplete="tel" />
+      </div>
+      <div class="field">
+        <label for="f-email">{t(lang, "contact.form.email")}</label>
+        <input id="f-email" name="email" type="email" autocomplete="email" />
+      </div>
+      <div class="field sm:col-span-2">
+        <label for="f-type">{t(lang, "contact.form.type")}</label>
+        <select id="f-type" name="requirement">
+          {types.map((option) => <option value={option}>{option}</option>)}
+        </select>
+      </div>
+      <div class="field sm:col-span-2">
+        <label for="f-message">{t(lang, "contact.form.message")}</label>
+        <textarea id="f-message" name="message" rows="5" required></textarea>
+      </div>
+    </div>
+
+    <div class="hidden" aria-hidden="true">
+      <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div data-error role="alert" class="mt-6 rounded-lg bg-red-tint p-4" hidden>
+      <p class="m-0">{t(lang, "contact.form.error")}</p>
+      <a href={site.phoneHref} class="mt-1 inline-flex min-h-11 items-center font-semibold text-red-ink">{site.phone}</a>
+    </div>
+
+    <div class="mt-6">
+      <Button type="submit" size="lg">{t(lang, "contact.form.submit")}</Button>
+    </div>
+  </form>
+
+  <div data-success role="status" class="rounded-lg border border-line bg-paper p-6" hidden>
+    <span class="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-red-tint text-red-ink">
+      <Icon name="check" size={26} />
+    </span>
+    <p class="m-0 mt-4 text-lg font-medium">{t(lang, "contact.form.success")}</p>
+  </div>
+</div>
+
+<style>
+  .field label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    display: block;
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 14px;
+    font: inherit;
+    font-size: 16px;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1.5px solid var(--line);
+    border-radius: 8px;
+  }
+  .field textarea { min-height: 140px; resize: vertical; }
+  .field input:hover,
+  .field select:hover,
+  .field textarea:hover { border-color: var(--slate); }
+  .field input:focus-visible,
+  .field select:focus-visible,
+  .field textarea:focus-visible { outline: 2px solid var(--slate); outline-offset: 2px; border-color: var(--slate); }
+  [data-error] a:hover { text-decoration: underline; }
+</style>

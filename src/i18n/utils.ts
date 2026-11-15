@@ -36,7 +36,9 @@ export function switchLangPath(url: URL): string {
   const current = getLang(url);
   const target: Lang = current === "en" ? "hi" : "en";
   const stripped = url.pathname.replace(/^\/hi(?=\/|$)/, "") || "/";
-  return localizedPath(target, stripped);
+  // The 404 page exists only in English, so the switch goes to the home page instead.
+  const page = /^\/404(\.html)?\/?$/.test(stripped) ? "/" : stripped;
+  return localizedPath(target, page);
 }
 
 /** Raw-value lookup (arrays/objects) with English fallback. Returns undefined-cast if missing. */

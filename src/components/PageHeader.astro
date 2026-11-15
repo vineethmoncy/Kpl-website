@@ -1,0 +1,45 @@
+---
+import Icon from "./Icon.astro";
+import { t, localizedPath, type Lang } from "../i18n/utils";
+interface Props {
+  title: string;
+  sub?: string;
+  /** Icon name shown in a red-tint square above the title. */
+  icon?: string;
+  /** Breadcrumb trail. Hrefs are English paths (e.g. "/services/"); they are localized here. The last item is the current page and renders as text. */
+  breadcrumb?: { label: string; href?: string }[];
+  lang: Lang;
+}
+const { title, sub, icon, breadcrumb, lang } = Astro.props;
+---
+
+<section class="bg-paper pt-8 pb-10 md:pt-12 md:pb-14">
+  <div class="container-x">
+    {breadcrumb && breadcrumb.length > 0 && (
+      <nav aria-label={t(lang, "nav.breadcrumb")} class="text-sm">
+        <ol class="m-0 flex list-none flex-wrap items-center p-0 text-muted">
+          {breadcrumb.map((b, i) => {
+            const last = i === breadcrumb.length - 1;
+            return (
+              <li class="flex items-center">
+                {last || !b.href ? (
+                  <span aria-current={last ? "page" : undefined} class="inline-flex min-h-11 items-center font-medium text-ink">{b.label}</span>
+                ) : (
+                  <a href={localizedPath(lang, b.href)} class="inline-flex min-h-11 items-center text-slate">{b.label}</a>
+                )}
+                {!last && <span aria-hidden="true" class="px-1 text-muted">/</span>}
+              </li>
+            );
+          })}
+        </ol>
+      </nav>
+    )}
+    {icon && (
+      <span class="mt-6 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-red-tint text-red-ink">
+        <Icon name={icon} size={26} />
+      </span>
+    )}
+    <h1 class:list={[icon ? "mt-5" : "mt-6", "max-w-4xl"]}>{title}</h1>
+    {sub && <p class="mt-4 max-w-3xl text-lg text-muted">{sub}</p>}
+  </div>
+</section>

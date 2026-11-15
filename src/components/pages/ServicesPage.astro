@@ -1,0 +1,32 @@
+---
+import Base from "../../layouts/Base.astro";
+import PageHeader from "../PageHeader.astro";
+import Section from "../Section.astro";
+import Reveal from "../Reveal.astro";
+import ServiceCard from "../ServiceCard.astro";
+import CtaBand from "../CtaBand.astro";
+import { t, type Lang } from "../../i18n/utils";
+import { site } from "../../data/site";
+import { services } from "../../data/services";
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const title = t(lang, "services.title");
+const sub = t(lang, "services.sub");
+---
+
+<Base title={`${title} | ${site.name}`} description={sub} lang={lang}>
+  <PageHeader
+    lang={lang}
+    title={title}
+    sub={sub}
+    breadcrumb={[{ label: t(lang, "nav.home"), href: "/" }, { label: t(lang, "nav.services") }]}
+  />
+  <Section tone="paper">
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {services.map((s, i) => (
+        <Reveal delay={(i % 3) * 60} class="h-full"><ServiceCard service={s} lang={lang} /></Reveal>
+      ))}
+    </div>
+  </Section>
+  <CtaBand lang={lang} />
+</Base>

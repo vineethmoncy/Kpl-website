@@ -1,0 +1,88 @@
+---
+import Base from "../../layouts/Base.astro";
+import PageHeader from "../PageHeader.astro";
+import Section from "../Section.astro";
+import Reveal from "../Reveal.astro";
+import Button from "../Button.astro";
+import Icon from "../Icon.astro";
+import StatCounter from "../StatCounter.astro";
+import { t, tx, type Lang } from "../../i18n/utils";
+import { site } from "../../data/site";
+import { stats } from "../../data/stats";
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const title = t(lang, "about.title");
+const intro = tx<string[]>(lang, "about.intro");
+const mission = tx<string[]>(lang, "about.mission");
+---
+
+<Base title={`${title} | ${site.name}`} description={intro[0]} lang={lang}>
+  <PageHeader
+    lang={lang}
+    title={title}
+    breadcrumb={[{ label: t(lang, "nav.home"), href: "/" }, { label: t(lang, "nav.about") }]}
+  />
+
+  <Section tone="paper">
+    <div class="grid gap-5 text-lg">
+      {intro.map((p) => <p class="m-0">{p}</p>)}
+    </div>
+    <div class="mt-12 grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-4 md:gap-x-10">
+      {stats.map((s) => <StatCounter value={s.value} suffix={s.suffix} label={s.label} lang={lang} />)}
+    </div>
+  </Section>
+
+  <Section tone="surface">
+    <div class="grid gap-10 md:grid-cols-2 md:gap-12">
+      <Reveal>
+        <div class="rounded-lg border border-line p-6 md:p-8">
+          <h2>{t(lang, "about.visionTitle")}</h2>
+          <p class="mt-4 text-lg">{t(lang, "about.vision")}</p>
+        </div>
+      </Reveal>
+      <Reveal>
+        <div>
+          <h2>{t(lang, "about.missionTitle")}</h2>
+          <ul class="m-0 mt-4 list-none p-0">
+            {mission.map((m) => (
+              <li class="flex gap-4 border-t border-line py-4 last:border-b">
+                <span class="mt-0.5 shrink-0 text-red-ink"><Icon name="check" size={24} /></span>
+                <span>{m}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </Reveal>
+    </div>
+  </Section>
+
+  <Section tone="paper">
+    <div class="rounded-lg bg-red-tint p-6 md:p-8">
+      <h2>{t(lang, "about.distributorTitle")}</h2>
+      <p class="mt-3 text-lg">{t(lang, "about.distributorText")}</p>
+    </div>
+  </Section>
+
+  <Section tone="surface">
+    <div class="grid gap-10 md:grid-cols-2 md:gap-12">
+      <div>
+        <h2>{t(lang, "about.registrationTitle")}</h2>
+        <dl class="m-0 mt-4">
+          <div class="border-t border-line py-4">
+            <dt class="text-sm uppercase tracking-wider text-slate">{t(lang, "footer.gstin")}</dt>
+            <dd class="m-0 mt-1 font-head text-2xl font-bold tabular-nums">{site.gstin}</dd>
+          </div>
+        </dl>
+      </div>
+      <div>
+        <h2>{t(lang, "about.profileTitle")}</h2>
+        <p class="mt-4 text-lg text-muted">{t(lang, "about.profileText")}</p>
+        <div class="mt-6">
+          <Button href={site.profilePdf} variant="secondary" size="lg">
+            <Icon name="download" size={22} />{t(lang, "cta.downloadProfile")}
+          </Button>
+        </div>
+      </div>
+    </div>
+  </Section>
+</Base>

@@ -1,19 +1,23 @@
 ---
 interface Props {
-  href: string;
+  href?: string;
+  /** Used only when no href is given: renders a <button> with this type. */
+  type?: "submit" | "button";
   variant?: "primary" | "secondary" | "ghost";
   size?: "md" | "lg";
   external?: boolean;
   class?: string;
 }
-const { href, variant = "primary", size = "md", external = false, class: extra = "" } = Astro.props;
+const { href, type = "button", variant = "primary", size = "md", external = false, class: extra = "" } = Astro.props;
+const Tag = href ? "a" : "button";
 ---
 
-<a
+<Tag
   href={href}
+  type={href ? undefined : type}
   class:list={["btn", `btn-${variant}`, `btn-${size}`, extra]}
   {...external ? { target: "_blank", rel: "noopener noreferrer" } : {}}
-><slot /></a>
+><slot /></Tag>
 
 <style>
   .btn {

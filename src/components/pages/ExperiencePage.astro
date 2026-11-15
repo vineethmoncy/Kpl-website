@@ -1,0 +1,93 @@
+---
+import Base from "../../layouts/Base.astro";
+import PageHeader from "../PageHeader.astro";
+import Section from "../Section.astro";
+import Reveal from "../Reveal.astro";
+import ClientList from "../ClientList.astro";
+import Icon from "../Icon.astro";
+import { t, tx, type Lang } from "../../i18n/utils";
+import { loc } from "../../data/types";
+import { site } from "../../data/site";
+import { clients } from "../../data/clients";
+import { projects } from "../../data/projects";
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const title = t(lang, "experience.title");
+const sub = t(lang, "experience.sub");
+const voltages = ["66", "132", "220", "400"];
+const types = tx<string[]>(lang, "experience.types");
+---
+
+<Base title={`${title} | ${site.name}`} description={sub} lang={lang}>
+  <PageHeader
+    lang={lang}
+    title={title}
+    sub={sub}
+    breadcrumb={[{ label: t(lang, "nav.home"), href: "/" }, { label: title }]}
+  />
+
+  <Section tone="paper" title={t(lang, "experience.voltageTitle")}>
+    <div class="relative">
+      <div class="pointer-events-none absolute inset-x-0 top-1/2 hidden h-px bg-line md:block" aria-hidden="true"></div>
+      <ul class="relative m-0 grid list-none grid-cols-2 gap-4 p-0 md:grid-cols-4 md:gap-6">
+        {voltages.map((v) => (
+          <li class="rounded-lg border border-line bg-surface p-4 text-center md:p-6">
+            <p class="m-0 font-head text-4xl font-bold leading-none tabular-nums text-red-ink md:text-5xl">
+              {v}<span class="text-2xl md:text-3xl">kV</span>
+            </p>
+          </li>
+        ))}
+      </ul>
+    </div>
+    <p class="mt-8 max-w-3xl text-lg text-muted">{t(lang, "experience.voltageText")}</p>
+  </Section>
+
+  <Section tone="surface" title={t(lang, "experience.typesTitle")}>
+    <ul class="m-0 grid list-none gap-x-12 p-0 md:grid-cols-2">
+      {types.map((item) => (
+        <li class="flex gap-4 border-t border-line py-6">
+          <span class="mt-0.5 shrink-0 text-red-ink"><Icon name="check" size={28} /></span>
+          <span class="font-medium">{item}</span>
+        </li>
+      ))}
+    </ul>
+  </Section>
+
+  <Section tone="paper" title={t(lang, "experience.clientsTitle")}>
+    <Reveal>
+      <div class="grid gap-10 md:grid-cols-2 md:gap-16">
+        <ClientList heading={t(lang, "home.clients.utilities")} items={clients.utilities} lang={lang} />
+        <ClientList heading={t(lang, "home.clients.industry")} items={clients.industry} lang={lang} />
+      </div>
+    </Reveal>
+  </Section>
+
+  {projects.length > 0 && (
+    <Section tone="surface" title={t(lang, "experience.projectsTitle")}>
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {projects.map((p, i) => (
+          <Reveal delay={(i % 3) * 60} class="h-full">
+            <article class="flex h-full flex-col rounded-lg border border-line bg-surface p-6">
+              <span class="self-start rounded-md bg-red-tint px-3 py-1 font-head text-base font-semibold text-red-ink">{p.voltage}</span>
+              <h3 class="mt-4">{loc(p.title, lang)}</h3>
+              <dl class="mt-4 grid gap-3">
+                <div>
+                  <dt class="text-sm uppercase tracking-wider text-slate">{t(lang, "experience.location")}</dt>
+                  <dd class="m-0">{loc(p.location, lang)}</dd>
+                </div>
+                <div>
+                  <dt class="text-sm uppercase tracking-wider text-slate">{t(lang, "experience.scope")}</dt>
+                  <dd class="m-0">{loc(p.scope, lang)}</dd>
+                </div>
+                <div>
+                  <dt class="text-sm uppercase tracking-wider text-slate">{t(lang, "experience.year")}</dt>
+                  <dd class="m-0 tabular-nums">{p.year}</dd>
+                </div>
+              </dl>
+            </article>
+          </Reveal>
+        ))}
+      </div>
+    </Section>
+  )}
+</Base>
